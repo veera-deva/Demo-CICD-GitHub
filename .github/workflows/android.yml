@@ -28,3 +28,14 @@ jobs:
         run: chmod +x gradlew
       - name: Build with Gradle
         run: ./gradlew build
+      - name: generate AAR and Apk files
+        if: always()
+        run: ./gradlew assembleDebug
+      - name: upload AAR files
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: artifacts.zip
+          path:
+            app/build/output/apk/debug/app-debug.apk
+            app/build/outputs/aar
