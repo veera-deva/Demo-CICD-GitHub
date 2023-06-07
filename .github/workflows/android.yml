@@ -55,7 +55,7 @@ jobs:
           keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
           keyPassword: ${{ secrets.KEY_PASSWORD }}
       - name: create service_account.json
-        id: create service account
+        id: createServiceAccount
         run: echo '${{ secrets.SERVICE_ACCOUNT_JSON }}' > service_account.json
 
       - name: Deploy app to play store (BETA)
