@@ -64,7 +64,7 @@ jobs:
         with:
           serviceAccountJson: service_account.json
           packageName: com.demo.demo_circle_ci
-          releaseFiles: app/release/app-release.aab
+          releaseFiles: app/build/outputs/bundle/release/app-release.aab
           track: beta
           whatsNewDirectory: whatsnew/
 
