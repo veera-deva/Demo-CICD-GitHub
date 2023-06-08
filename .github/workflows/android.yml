@@ -31,17 +31,20 @@ jobs:
 
       - name: Build with Gradle
         run: ./gradlew build
-      #      - name: generate AAR and Apk files
-      #        if: always()
-      #        run: ./gradlew assembleDebug
-      #      - name: upload AAR files
-      #        if: always()
-      #        uses: actions/upload-artifact@v2
-      #        with:
-      #          name: artifacts.zip
-      #          path:
-      #            app/build/output/apk/debug/app-debug.apk
-      #            app/build/outputs/aar
+
+      - name: Define version code with offset
+        env:
+          RUN_NUMBER: ${{ github.run_number }}
+          INITIAL_VERSION_CODE: 1
+        run:
+          VERSION_CODE =$((INITIAL_VERSION_CODE + RUN_NUMBER ))
+          echo "version_code=$VERSION_CODE" >> $GITHUB_ENV
+      - name: update version code
+        uses: chkfung/android-version-actions@v1.1
+        with:
+          gradlePath: android/app/build.gradle
+          versionCode: ${{ env.version_code }}
+
       - name: Build release AAB
         id: buildRelease
         run: ./gradlew bundleRelease
@@ -54,6 +57,11 @@ jobs:
           alias: ${{ secrets.ALIAS }}
           keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
           keyPassword: ${{ secrets.KEY_PASSWORD }}
+      - name: Upload artifacts
+        uses: actions/upload-artifact@master
+        with:
+          name: app-release.apk
+          path: ${{steps.sign_app.outputs.signedReleaseFile}}
       - name: create service_account.json
         id: createServiceAccount
         run: echo '${{ secrets.SERVICE_ACCOUNT_JSON }}' > service_account.json
