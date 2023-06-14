@@ -53,7 +53,7 @@ jobs:
       #        if: always()
       #        run: ./gradlew lint
       - name: Generate Release APK
-        run: ./gradlew assembleRelease
+        run: ./gradlew bundleRelease
 
       - name: Sign an APK
         uses: r0adkll/sign-android-release@v1
