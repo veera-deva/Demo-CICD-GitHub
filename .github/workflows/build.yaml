@@ -82,7 +82,7 @@ jobs:
     needs: [ build ]
     runs-on: ubuntu-latest
     steps:
-      - uses: action/download-artifact@master
+      - uses: actions/download-artifact@master
         with:
           name: release.apk
       - name: Upload artifact to firebase distribution
