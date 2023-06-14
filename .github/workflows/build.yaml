@@ -93,4 +93,4 @@ jobs:
           appId: ${{secrets.FIREBASE_APP_ID}}
           serviceCredentialsFileContent: ${{ secrets.FIREBASE_CREDENTIALS}}
           groups: SIT Testers
-          file: release.apk
+          file: /home/runner/work/Demo-CICD-GitHub/Demo-CICD-GitHub/release.apk
