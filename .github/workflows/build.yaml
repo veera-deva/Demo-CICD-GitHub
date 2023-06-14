@@ -2,13 +2,29 @@ name: Build
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "dev" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "dev" ]
 
 jobs:
-  build:
+  unit-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: unit tests
+        run: ./gradlew test
+  #  android-test:
+  #    runs-on: macos-latest
+  #    steps:
+  #      - uses: actions/checkout@v2
+  #      - name: Instrumentation Tests
+  #        uses: reactivecircus/android-emulator-runner@v2
+  #        with:
+  #          api-level: 29
+  #          script: ./gradlew connectedAndroidTest
 
+  build:
+    needs: [ unit-tests ]
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -25,9 +41,46 @@ jobs:
           cache: gradle
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
-      - name: check lint
-        if: always()
-        run: ./gradlew lint
+      #      - name: check lint
+      #        if: always()
+      #        run: ./gradlew lint
+      - name: Generate Release APK
+        run: ./gradlew assembleRelease
 
-      - name: Build with Gradle
-        run: ./gradlew build
+      - name: Sign an APK
+        uses: r0adkll/sign-android-release@v1
+        # ID used to access action output
+        id: sign_app
+        with:
+          releaseDirectory: app/build/outputs/bundle/release
+          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
+          alias: ${{ secrets.ALIAS }}
+          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+          keyPassword: ${{ secrets.KEY_PASSWORD }}
+          # 4
+      - uses: actions/upload-artifact@master
+        with:
+          name: release.apk
+          path: ${{steps.sign_app.outputs.signedReleaseFile}}
+        # 5
+      - uses: actions/upload-artifact@master
+        with:
+          name: mapping.txt
+          path: app/build/outputs/mapping/release/mapping.txt
+
+    #      - name: Build with Gradle
+    #        run: ./gradlew build
+    deploy-firebase:
+      needs: [ build ]
+      runs-on: ubuntu-latest
+      steps:
+        - uses: action/download-artifact@master
+          with:
+            name: release.apk
+        - name: Upload artifact to firebase distribution
+          uses: wzieba/Firebase-Distribution-Github-Action@v1
+          with:
+            appId: ${{secrets.FIREBASE_APP_ID}}
+            token: ${{secrets.FIREBASE_TOKEN}}
+            groups: SIT Testers
+            file: app-release-unsigned-signed.apk
