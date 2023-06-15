@@ -68,7 +68,9 @@ jobs:
           appId: ${{secrets.FIREBASE_APP_ID}}
           serviceCredentialsFileContent: ${{ secrets.FIREBASE_CREDENTIALS}}
           groups: SIT Testers
+          releaseNotes: whatsnew/
           file: app/build/outputs/apk/release/app-release-unsigned.apk
+
 
           #      - name: Sign an APK
           #        uses: r0adkll/sign-android-release@v1
