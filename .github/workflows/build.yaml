@@ -1,10 +1,10 @@
 name: Build
 
 on:
-#  push:
-#    branches: [ "dev" ]
-#  pull_request:
-#    branches: [ "dev" ]
+  push:
+    branches: [ "dev" ]
+  pull_request:
+    branches: [ "dev" ]
 
 jobs:
   unit-tests:
@@ -53,28 +53,28 @@ jobs:
       #        if: always()
       #        run: ./gradlew lint
       - name: Generate Release APK
-        run: ./gradlew bundleRelease
+        run: ./gradlew assembleRelease
 
       - name: Sign an APK
         uses: r0adkll/sign-android-release@v1
         # ID used to access action output
         id: sign_app
         with:
-          releaseDirectory: app/build/outputs/bundle/release
+          releaseDirectory: app/build/outputs/apk/release
           signingKeyBase64: ${{ secrets.SIGNING_KEY }}
           alias: ${{ secrets.ALIAS }}
           keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
           keyPassword: ${{ secrets.KEY_PASSWORD }}
           # 4
-      - uses: actions/upload-artifact@master
-        with:
-          name: release.apk
-          path: ${{steps.sign_app.outputs.signedReleaseFile}}
-        # 5
-      - uses: actions/upload-artifact@master
-        with:
-          name: mapping.txt
-          path: app/build/outputs/mapping/release/mapping.txt
+#      - uses: actions/upload-artifact@master
+#        with:
+#          name: release.apk
+#          path: ${{steps.sign_app.outputs.signedReleaseFile}}
+#        # 5
+#      - uses: actions/upload-artifact@master
+#        with:
+#          name: mapping.txt
+#          path: app/build/outputs/mapping/release/mapping.txt
 
     #      - name: Build with Gradle
     #        run: ./gradlew build
@@ -82,10 +82,10 @@ jobs:
     needs: [ build ]
     runs-on: ubuntu-latest
     steps:
-      - name: Download artifact
-        uses: actions/download-artifact@master
-        with:
-          name: release.apk
+#      - name: Download artifact
+#        uses: actions/download-artifact@master
+#        with:
+#          name: release.apk
 
       - name: Upload artifact to firebase distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1
@@ -93,4 +93,4 @@ jobs:
           appId: ${{secrets.FIREBASE_APP_ID}}
           serviceCredentialsFileContent: ${{ secrets.FIREBASE_CREDENTIALS}}
           groups: SIT Testers
-          file: release.apk
+          file: app/build/outputs/apk/release/app-release-unsigned.apk
