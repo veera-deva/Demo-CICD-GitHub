@@ -1,4 +1,4 @@
-name: Build
+name: Build and distribute
 
 on:
   push:
@@ -21,15 +21,15 @@ jobs:
         run: chmod +x gradlew
       - name: unit tests
         run: ./gradlew test
-  #  android-test:
-  #    runs-on: macos-latest
-  #    steps:
-  #      - uses: actions/checkout@v2
-  #      - name: Instrumentation Tests
-  #        uses: reactivecircus/android-emulator-runner@v2
-  #        with:
-  #          api-level: 29
-  #          script: ./gradlew connectedAndroidTest
+  android-test:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Instrumentation Tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 29
+          script: ./gradlew connectedAndroidTest
 
   build:
     needs: [ unit-tests ]
@@ -49,9 +49,9 @@ jobs:
           cache: gradle
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
-      #      - name: check lint
-      #        if: always()
-      #        run: ./gradlew lint
+               - name: check lint
+               if: always()
+               run: ./gradlew lint
 
       - uses: actions/cache@v2
         with:
@@ -62,7 +62,7 @@ jobs:
       - name: Generate Release APK
         run: ./gradlew assembleRelease
 
-      - name: Upload artifact to firebase distribution
+      - name: Upload and distribute artifact to firebase distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
           appId: ${{secrets.FIREBASE_APP_ID}}
