@@ -68,7 +68,7 @@ jobs:
           appId: ${{secrets.FIREBASE_APP_ID}}
           serviceCredentialsFileContent: ${{ secrets.FIREBASE_CREDENTIALS}}
           groups: SIT Testers
-          releaseNotesFile: whatsnew/
+          releaseNotesFile: whatsnew/releaseNotes.txt
           file: app/build/outputs/apk/release/app-release-unsigned.apk
 
 
