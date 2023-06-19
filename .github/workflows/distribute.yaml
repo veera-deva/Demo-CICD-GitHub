@@ -1,6 +1,6 @@
 name: distribute
 
-on:
+#on:
 #  push:
 #    branches: [ dev ]
 

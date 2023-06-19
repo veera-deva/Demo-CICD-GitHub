@@ -1,6 +1,6 @@
 name: Build and distribute
 
-on:
+#on:
 #  push:
 #    branches: [ "dev" ]
 #  pull_request:
