@@ -1,4 +1,4 @@
-name: Android CI
+name: publish play store
 
 on:
   push:
@@ -8,7 +8,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -28,23 +27,6 @@ jobs:
       - name: check lint
         if: always()
         run: ./gradlew lint
-
-#      - name: Build with Gradle
-#        run: ./gradlew build
-
-#      - name: Define version code with offset
-#        env:
-#          RUN_NUMBER: ${{ github.run_number }}
-#          INITIAL_VERSION_CODE: 1
-#        run:
-#          VERSION_CODE =$((INITIAL_VERSION_CODE + RUN_NUMBER ))
-#          echo "version_code=$VERSION_CODE" >> $GITHUB_ENV
-#      - name: update version code
-#        uses: chkfung/android-version-actions@v1.1
-#        with:
-#          gradlePath: android/app/build.gradle
-#          versionCode: ${{ env.version_code }}
-
       - name: Build release AAB
         id: buildRelease
         run: ./gradlew bundleRelease
@@ -73,5 +55,5 @@ jobs:
           serviceAccountJson: service_account.json
           packageName: com.demo.demo_circle_ci
           releaseFiles: app/build/outputs/bundle/release/app-release.aab
-          track: beta
+          track: alpha
           whatsNewDirectory: whatsnew/
