@@ -40,8 +40,8 @@ jobs:
 
       - name: Commit and push changes
         run: |
-          git config user.email "github-actions@github.com"
-          git config user.name "Github Actions"
+          git config user.email "veera.and@gmail.com"
+          git config user.name "veera"
           git commit -am "Bump version code and change version name"
           git push origin HEAD
 
