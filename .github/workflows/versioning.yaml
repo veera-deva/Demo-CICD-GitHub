@@ -12,6 +12,10 @@ on:
 jobs:
   bump-version-and-open-pr:
     runs-on: ubuntu-latest
+    permissions:
+      content: write
+      packages: write
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
