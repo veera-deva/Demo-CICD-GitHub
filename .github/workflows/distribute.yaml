@@ -1,4 +1,4 @@
-name: distribute
+name: distribute using fastlane
 
 on:
   push:
