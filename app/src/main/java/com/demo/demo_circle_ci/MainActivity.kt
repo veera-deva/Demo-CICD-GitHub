@@ -22,7 +22,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting("Android CI CD In GitHub Actions")
+                    Greeting("Android CI CD In GitHub Actions - Firebase distribution")
                 }
             }
         }
